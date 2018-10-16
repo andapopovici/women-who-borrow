@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(version: 20180717192338) do
   create_table "books_tags", id: false, force: :cascade do |t|
     t.integer "book_id", null: false
     t.integer "tag_id", null: false
+    t.index ["book_id", "tag_id"], name: "index_books_tags_on_book_id_and_tag_id"
+    t.index ["tag_id", "book_id"], name: "index_books_tags_on_tag_id_and_book_id"
   end
 
   create_table "tags", force: :cascade do |t|
