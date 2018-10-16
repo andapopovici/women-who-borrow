@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180717192338) do
+ActiveRecord::Schema.define(version: 20181016183952) do
 
   create_table "books", force: :cascade do |t|
     t.string "title"
@@ -27,6 +27,13 @@ ActiveRecord::Schema.define(version: 20180717192338) do
     t.integer "tag_id", null: false
     t.index ["book_id", "tag_id"], name: "index_books_tags_on_book_id_and_tag_id"
     t.index ["tag_id", "book_id"], name: "index_books_tags_on_tag_id_and_book_id"
+  end
+
+  create_table "borrowings", force: :cascade do |t|
+    t.integer "lender_id"
+    t.integer "borrower_id"
+    t.integer "book_id"
+    t.date "due_date"
   end
 
   create_table "tags", force: :cascade do |t|
