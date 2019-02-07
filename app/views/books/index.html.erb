@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <h1>Books</h1>
 
 <table>
@@ -10,6 +8,7 @@
       <th>Edition</th>
       <th>Year</th>
       <th>Isbn</th>
+      <th>Owner</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -22,6 +21,7 @@
         <td><%= book.edition %></td>
         <td><%= book.year %></td>
         <td><%= book.isbn %></td>
+        <td><%= book.user.email %></td>
         <td><%= link_to 'Show', book %></td>
         <td><%= link_to 'Edit', edit_book_path(book) %></td>
         <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
