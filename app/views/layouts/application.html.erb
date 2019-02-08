@@ -1,26 +1,28 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>WomenWhoBorrow</title>
-    <%= csrf_meta_tags %>
+<head>
+  <title>WomenWhoBorrow</title>
+  <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+</head>
 
-  <body>
-  	<% if signed_in? %>
-      Signed in as: <%= current_user.email %>
-      <%= button_to 'Sign out', sign_out_path, method: :delete %>
-    <% else %>
-      <%= link_to 'Sign in', sign_in_path %>
-    <% end %>
+<body>
+ <% if signed_in? %>
+ Signed in as: <%= current_user.email %>
+ <%= button_to 'Sign out', sign_out_path, method: :delete %>
+ <h2><%= link_to 'Books', books_path %></h2>
+ <h2><%= link_to 'Users', users_path %></h2>
+ <% else %>
+ <%= link_to 'Sign in', sign_in_path %>
+ <% end %>
 
-    <div id="flash">
-      <% flash.each do |key, value| %>
-        <div class="flash <%= key %>"><%= value %></div>
-      <% end %>
-    </div>
-    <%= yield %>
-  </body>
+ <div id="flash">
+  <% flash.each do |key, value| %>
+  <div class="flash <%= key %>"><%= value %></div>
+  <% end %>
+</div>
+<%= yield %>
+</body>
 </html>
