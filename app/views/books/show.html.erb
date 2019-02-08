@@ -28,13 +28,18 @@
 <%= collection_check_boxes(:book, :tag_ids, Tag.all, :id, :name) %>
 </p>
 
-<%= link_to 'Edit', edit_book_path(@book) %> |
+<% if @book.belongs_to?(current_user) %>
+  <%= link_to 'Edit', edit_book_path(@book) %>
+<% end %>
 
- <%= form_for :book,
-                    url: book_path(@book),
-                    html: {
-                      method: :put,
-                    } do |f| %>
+
+<% unless @book.belongs_to?(current_user) %>
+  <%= form_for :book,
+                url: book_path(@book),
+                html: {
+                  method: :put,
+                  } do |f| %>
                     <input type="hidden" name="book[status]" value="<%= Book::RESERVED %>"/>
                     <input type="submit" value="Reserve"/>
-                  <% end %></td>
+                  <% end %>
+<% end %>

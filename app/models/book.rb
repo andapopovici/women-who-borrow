@@ -10,4 +10,8 @@ class Book < ApplicationRecord
 
   validates :status, :inclusion => { :in => STATUSES }, :allow_blank => false
 
+  def belongs_to?(current_user)
+  	user == current_user
+  end
+
 end
