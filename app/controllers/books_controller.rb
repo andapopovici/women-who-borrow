@@ -25,7 +25,7 @@ class BooksController < ApplicationController
   # POST /books
   # POST /books.json
   def create
-    @book = Book.new(book_params.merge(user: current_user, status: Book::RESERVED))
+    @book = Book.new(book_params.merge(user: current_user, status: Book::FREE))
 
     respond_to do |format|
       if @book.save
