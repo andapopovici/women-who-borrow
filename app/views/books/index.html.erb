@@ -22,12 +22,11 @@
         <td><%= book.edition %></td>
         <td><%= book.year %></td>
         <td><%= book.isbn %></td>
-        <td><%= book.user.email %></td>
+        <td><%= link_to "#{ book.user.email }", user_path(book.user) %></td>
         <td><%= book.status %></td>
-        <td><%= link_to 'Show', book %></td>
-        <td><%= link_to 'Edit', edit_book_path(book) %></td>
-        <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <td><%= link_to 'Reserve', book %></td>
+        <% unless book.belongs_to?(current_user) %>
+          <td><%= link_to 'Reserve', book %></td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
