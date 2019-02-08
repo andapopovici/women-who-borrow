@@ -41,6 +41,11 @@
     <%= collection_check_boxes(:book, :tag_ids, Tag.all, :id, :name) %>
   </div>
 
+<div class="field">
+    <%= form.label :status %>
+    <%= form.text_field :status, id: :status %>
+  </div>
+
   <div class="actions">
     <%= form.submit %>
   </div>
