@@ -4,15 +4,8 @@ class User < ApplicationRecord
   has_many :books, dependent: :destroy
   has_many :reservations
 
-  def reserved_books
-  	reservations.map(&:book)
-  end
-
   def reserve(book)
-    if book.update_attributes(status: Book::RESERVED)
-      reservation = Reservation.new(user: self, book: book)
-      reservation.save
-    end
+    book.update_attributes(status: Book::RESERVED)
   end
 
   def unreserve(book)

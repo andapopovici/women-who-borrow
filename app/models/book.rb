@@ -3,8 +3,7 @@ class Book < ApplicationRecord
   has_one :reservation, dependent: :destroy
   belongs_to :user, foreign_key: "user_id"
 
-  validate :cannot_edit_reserved
-
+  validate :cannot_edit_reserved_or_booked
   STATUSES = [
     FREE = 'free',
     RESERVED = 'reserved',
@@ -22,14 +21,23 @@ class Book < ApplicationRecord
   end
 
   def reserved_by?(current_user)
-    reservation && reservation.user == current_user
+    status == RESERVED && reservation.user == current_user
+  end
+
+  def has_pending_reservation?
+    reservation && status == RESERVED
+  end
+
+  def is_borrowed?
+    status == BORROWED
   end
 
   private
 
-  def cannot_edit_reserved
-    if (status == RESERVED) && (status_change == nil)
-      self.errors[:status] << "This book has been reserved and cannot be edited"
+  def cannot_edit_reserved_or_booked
+    if status != FREE && (status_change == nil)
+      self.errors[:status] << "This book has been #{status} and cannot be edited"
     end
   end
+
 end

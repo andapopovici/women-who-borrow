@@ -23,7 +23,7 @@
         <td><%= book.year %></td>
         <td><%= book.isbn %></td>
         <td><%= link_to "#{ book.user.email }", user_path(book.user) %></td>
-        <td><%= book.status %></td>
+        <td><%= friendly_status(book) %></td>
         <% if book.available_to_borrow?(current_user) %>
           <td><%= link_to 'Reserve', book %></td>
         <% end %>

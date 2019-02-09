@@ -45,10 +45,19 @@
 <% end %>
 
 <% if @book.available_to_borrow?(current_user) %>
-  <%= button_to "Reserve", reserve_book_path(@book), :method => :put %>
+   <%= form_for @book do |f| %>
+     <%= f.hidden_field :status, value: Book::RESERVED %>
+     <%= f.submit "Reserve", class: "btn" %>
+   <% end %>
 <% end %>
 
 <% if @book.reserved_by?(current_user) %>
-  <%= button_to "Withdraw reservation", unreserve_book_path(@book), :method => :put %>
+  <%= form_for @book do |f| %>
+     <%= f.hidden_field :status, value: Book::FREE %>
+     <%= f.submit "Withdraw reservation", class: "btn" %>
+  <% end %>
 <% end %>
+
+
+
 
