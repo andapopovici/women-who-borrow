@@ -26,7 +26,7 @@ class UsersController < Clearance::UsersController
 	def destroy
 		@user.destroy
 		respond_to do |format|
-			format.html { redirect_to users_url, notice: 'Your account was successfully deleted.' }
+			format.html { redirect_to sign_in_path, notice: 'Your account was successfully deleted.' }
 			format.json { head :no_content }
 		end
 	end
