@@ -33,7 +33,7 @@
 <% end %>
 
 
-<% unless @book.belongs_to?(current_user) %>
+<% if @book.available_to_borrow?(current_user) %>
   <%= form_for :book,
                 url: book_path(@book),
                 html: {

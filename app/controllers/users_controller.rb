@@ -37,7 +37,4 @@ class UsersController < Clearance::UsersController
     	@user = User.find(params[:id])
     end
 
-    def user_params
-      params.require(:user).permit(:email)
-    end
 end
