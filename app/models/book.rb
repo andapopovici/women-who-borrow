@@ -14,4 +14,8 @@ class Book < ApplicationRecord
   	user == current_user
   end
 
+  def available_to_borrow?(current_user)
+  	status == FREE && !belongs_to?(current_user)
+  end
+
 end

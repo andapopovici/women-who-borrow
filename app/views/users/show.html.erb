@@ -21,7 +21,7 @@
         <td><%= link_to 'Edit', edit_book_path(book) %></td>
         <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       <% end %>
-      <% unless book.belongs_to?(current_user) %>
+      <% unless book.available_to_borrow?(current_user) %>
         <td><%= link_to 'Reserve', book %></td>
       <% end %>
     </tr>
