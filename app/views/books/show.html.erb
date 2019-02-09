@@ -47,3 +47,8 @@
 <% if @book.available_to_borrow?(current_user) %>
   <%= button_to "Reserve", reserve_book_path(@book), :method => :put %>
 <% end %>
+
+<% if @book.reserved_by?(current_user) %>
+  <%= button_to "Withdraw reservation", unreserve_book_path(@book), :method => :put %>
+<% end %>
+

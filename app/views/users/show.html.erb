@@ -6,7 +6,7 @@
 <%= link_to 'Edit', edit_user_path(@user) %> |
 <%= link_to 'Delete account', @user, method: :delete, data: { confirm: 'Are you sure?' } %>
 
-<h2>Books owned (<%=@user.books.count%> in total):</h1>
+<h2>Books owned (<%= @user.books.count %> in total):</h2>
   <table>
     <th>Title</th>
     <th>ISBN</th>
@@ -31,6 +31,21 @@
   <% if @user == current_user %>
     <%= link_to 'New Book', new_book_path %>
   <% end %>
+
+<h2>Books reserved (<%= @user.reservations.count %> in total):</h2>
+
+  <table>
+    <th>Title</th>
+    <th>ISBN</th>
+    <th colspan="1"></th>
+    <% @user.reserved_books.each do |book| %>
+    <tr>
+      <td> <%= book.title %> </td>
+      <td> <%= book.isbn %> </td>
+      <td> <%= link_to 'Withdraw reservation', book %></td>
+    </tr>
+    <% end %>
+  </table>
 
 
 
