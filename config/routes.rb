@@ -1,13 +1,11 @@
 Rails.application.routes.draw do
-	resources :books
+	resources :books do 
+		put :reserve, on: :member
+	end
 
 	resources :tags
 
-	resources :users do 
-		collection do
-			get :search
-		end
-	end
+	resources :users
 
 	root 'books#index'
 end
