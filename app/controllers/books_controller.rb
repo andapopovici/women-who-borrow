@@ -1,6 +1,6 @@
 class BooksController < ApplicationController
   before_action :require_login
-  before_action :set_book, only: [:show, :edit, :update, :destroy]
+  before_action :set_book, only: [:show, :edit, :update, :destroy, :reserve]
 
   # GET /books
   # GET /books.json
@@ -47,6 +47,18 @@ class BooksController < ApplicationController
         format.json { render :show, status: :ok, location: @book }
       else
         format.html { render :edit }
+        format.json { render json: @book.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def reserve 
+    respond_to do |format|
+      if @book.reserve(current_user)
+        format.html { redirect_to @book, notice: 'Book was successfully reserved.' }
+        format.json { render :show, status: :ok, location: @book }
+      else
+        format.html { render :show }
         format.json { render json: @book.errors, status: :unprocessable_entity }
       end
     end
