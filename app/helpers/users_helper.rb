@@ -1,5 +1,9 @@
 module UsersHelper
 
+  def owned_books(user)
+    user.books
+  end
+
   def reserved_books(user)
     reserved_or_borrowed(user).select { |b| b.status == Book::RESERVED }
   end
