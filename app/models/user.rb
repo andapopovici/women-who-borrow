@@ -4,13 +4,7 @@ class User < ApplicationRecord
   has_many :books, dependent: :destroy
   has_many :reservations
 
-  def reserve(book)
-    book.update_attributes(status: Book::RESERVED)
-  end
-
-  def unreserve(book)
-    if book.reservation && book.update_attributes(status: Book::FREE)
-      book.reservation.destroy
-    end
+  def friendly_name
+    "#{first_name.capitalize} #{last_name.capitalize}"
   end
 end
