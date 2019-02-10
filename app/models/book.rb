@@ -4,6 +4,8 @@ class Book < ApplicationRecord
   belongs_to :user, foreign_key: "user_id"
 
   validate :cannot_edit_reserved_or_booked
+  before_destroy :cannot_destroy_reserved_or_booked
+
   STATUSES = [
     FREE = 'free',
     RESERVED = 'reserved',
@@ -37,6 +39,13 @@ class Book < ApplicationRecord
   def cannot_edit_reserved_or_booked
     if status != FREE && (status_change == nil)
       self.errors[:status] << "This book has been #{status} and cannot be edited"
+    end
+  end
+
+  def cannot_destroy_reserved_or_booked
+    if status != FREE
+      self.errors[:status] << "This book has been #{status} and cannot be deleted"
+      throw :abort
     end
   end
 
