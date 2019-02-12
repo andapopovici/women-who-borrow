@@ -25,7 +25,7 @@ class BooksController < ApplicationController
   # POST /books
   # POST /books.json
   def create
-    @book = Book.new(book_params.merge(user: current_user, status: Book::FREE))
+    @book = Book.new(book_params.merge(user: current_user, status: Book::AVAILABLE))
 
     respond_to do |format|
       if @book.save
@@ -82,10 +82,10 @@ class BooksController < ApplicationController
     def check_for_reservation_changes(old_status, new_status)
       status_change = [old_status, new_status]
 
-      if status_change == [Book::FREE, Book::RESERVED]
+      if status_change == [Book::AVAILABLE, Book::RESERVED]
         reservation = Reservation.new(user: current_user, book: @book)
         reservation.save
-      elsif (new_status == Book::FREE) && new_status != old_status
+      elsif (new_status == Book::AVAILABLE) && new_status != old_status
         @book.reservation.destroy
       end
     end

@@ -13,3 +13,14 @@
  *= require_tree .
  *= require_self
  */
+
+body {
+  background-image: url('books.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+h1, h2 {
+  font-family: 'Headland One', serif;
+}

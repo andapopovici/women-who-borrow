@@ -40,6 +40,21 @@
 <%= collection_check_boxes(:book, :tag_ids, Tag.all, :id, :name) %>
 </p>
 
+
+<p>
+  <strong>Owner:</strong>
+  <%= link_to "#{ @book.user.first_name }", user_path(@book.user) %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= capitalized_status(@book) %>
+  <% unless @book.is_available? %>
+    by <%= link_to "#{ @book.borrower.first_name }", user_path(@book.borrower) %>
+  <% end %>
+
+</p>
+
 <% if @book.belongs_to?(current_user) %>
   <%= link_to 'Edit', edit_book_path(@book) %>
 <% end %>
@@ -53,7 +68,7 @@
 
 <% if @book.reserved_by?(current_user) %>
   <%= form_for @book do |f| %>
-     <%= f.hidden_field :status, value: Book::FREE %>
+     <%= f.hidden_field :status, value: Book::AVAILABLE %>
      <%= f.submit "Withdraw reservation", class: "btn" %>
   <% end %>
 <% end %>
