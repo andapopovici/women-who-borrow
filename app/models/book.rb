@@ -7,7 +7,7 @@ class Book < ApplicationRecord
   before_destroy :cannot_destroy_reserved_or_booked
 
   STATUSES = [
-    FREE = 'free',
+    AVAILABLE = 'available',
     RESERVED = 'reserved',
     BORROWED = 'borrowed'
   ]
@@ -18,12 +18,20 @@ class Book < ApplicationRecord
   	user == current_user
   end
 
+  def is_available?
+    status == AVAILABLE
+  end
+
   def available_to_borrow?(current_user)
-  	status == FREE && !belongs_to?(current_user)
+  	status == AVAILABLE && !belongs_to?(current_user)
   end
 
   def reserved_by?(current_user)
     status == RESERVED && reservation.user == current_user
+  end
+
+  def borrower
+    reservation.user
   end
 
   def has_pending_reservation?
@@ -37,13 +45,13 @@ class Book < ApplicationRecord
   private
 
   def cannot_edit_reserved_or_booked
-    if status != FREE && (status_change == nil)
+    if status != AVAILABLE && (status_change == nil)
       self.errors[:status] << "This book has been #{status} and cannot be edited"
     end
   end
 
   def cannot_destroy_reserved_or_booked
-    if status != FREE
+    if status != AVAILABLE
       self.errors[:status] << "This book has been #{status} and cannot be deleted"
       throw :abort
     end

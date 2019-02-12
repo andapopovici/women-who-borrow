@@ -5,6 +5,7 @@
   <%= csrf_meta_tags %>
 
   <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <link href="https://fonts.googleapis.com/css?family=Headland+One" rel="stylesheet">
   <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
 </head>
 
@@ -12,6 +13,7 @@
  <% if signed_in? %>
  Signed in as: <%= link_to "#{current_user.email}", user_path(current_user) %>
  <%= button_to 'Sign out', sign_out_path, method: :delete %>
+ <h1>Women Who Borrow</h1>
  <h2><%= link_to 'Books', books_path %></h2>
  <h2><%= link_to 'Users', users_path %></h2>
  <% else %>
