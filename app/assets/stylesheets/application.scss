@@ -12,4 +12,74 @@
  *
  */
 
- @import "bootstrap";
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,900');
+@import url('https://fonts.googleapis.com/css?family=Work+Sans:400,500');
+
+@import "bootstrap";
+
+$darkest-blue: #3769a5;
+$blue: #0072bb;
+$light-blue: #dcebf6;
+$orange: #f16723;
+$light-green: #5fad56;
+
+$montserrat: 'Montserrat', sans-serif;
+$work-sans: 'Work Sans', sans-serif;
+
+body {
+	font-family: $work-sans;
+}
+
+.centered {
+	margin-left: auto;
+  	margin-right: auto;
+}
+
+.signup-image {
+ 	display: block;
+  	margin-top: 1em;
+ }
+
+ .signup-title-text {
+ 	text-align: center;
+ 	font-family: $montserrat;
+ 	font-size: 4rem;
+ 	font-weight: 900;
+ 	color: $darkest-blue;
+ }
+
+ .orange-text {
+ 	color: $orange;
+ }
+
+ .signup-stage-box {
+ 	background: $light-blue;
+ 	border-radius: 12px;
+ 	margin-left: 15px;
+ 	margin-right: 15px;
+ 	padding: 20px;
+ 	color: $blue;
+ 	font-family: $work-sans;
+ 	font-weight: 500;
+ 	text-align: center;
+ }
+
+ .center-text {
+ 	text-align: center;
+ }
+
+ .signup-explanation {
+ 	margin-top: 4em;
+ }
+
+ .circle-bg {
+    background: $darkest-blue;
+    color : white;
+    height: 2em;
+    width: 2em;
+    line-height: 2em;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+ }
