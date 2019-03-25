@@ -1,15 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+book_one:
   title: MyString
   author: MyString
   edition: 1
   year: 1
   isbn: MyString
+  status: available
+  user: user_one
 
-two:
+book_two:
   title: MyString
   author: MyString
   edition: 1
   year: 1
   isbn: MyString
+  status: available
+  user: user_one

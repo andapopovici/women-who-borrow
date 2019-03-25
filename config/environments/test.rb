@@ -1,4 +1,7 @@
 Rails.application.configure do
+  # Include Clearance middleware which avoids wasting time visiting, loading,
+  # and submitting the sign in form in controller tests
+  config.middleware.use Clearance::BackDoor
   config.action_mailer.default_url_options = { host: 'example.com' }
   # Settings specified here will take precedence over those in config/application.rb.
 
