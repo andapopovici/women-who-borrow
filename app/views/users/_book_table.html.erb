@@ -25,7 +25,7 @@
         <% if book.belongs_to?(current_user) %>
           <td><%= link_to 'Edit', edit_book_path(book) %></td>
           <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-          <% if book.has_pending_reservation? %>
+          <% if book.is_reserved? %>
             <td>
               <%= form_for book do |f| %>
                 <%= f.hidden_field :status, value: Book::BORROWED %>
@@ -42,7 +42,7 @@
             </td>
           <% end %>
         <% end %>
-        <% if book.available_to_borrow?(current_user) %>
+        <% if book.available_to_borrow_by?(current_user) %>
           <td><%= link_to 'Reserve', book %></td>
         <% end %>
       <% end %>

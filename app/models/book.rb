@@ -18,15 +18,15 @@ class Book < ApplicationRecord
   scope :reserved, -> { where(status: RESERVED) }
 
   def belongs_to?(current_user)
-  	user == current_user
+    user == current_user
   end
 
   def is_available?
     status == AVAILABLE
   end
 
-  def available_to_borrow?(current_user)
-  	status == AVAILABLE && !belongs_to?(current_user)
+  def available_to_borrow_by?(current_user)
+    status == AVAILABLE && !belongs_to?(current_user)
   end
 
   def reserved_by?(current_user)
@@ -37,7 +37,7 @@ class Book < ApplicationRecord
     reservation.user
   end
 
-  def has_pending_reservation?
+  def is_reserved?
     reservation && status == RESERVED
   end
 

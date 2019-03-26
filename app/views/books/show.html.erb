@@ -59,7 +59,7 @@
   <%= link_to 'Edit', edit_book_path(@book) %>
 <% end %>
 
-<% if @book.available_to_borrow?(current_user) %>
+<% if @book.available_to_borrow_by?(current_user) %>
    <%= form_for @book do |f| %>
      <%= f.hidden_field :status, value: Book::RESERVED %>
      <%= f.submit "Reserve", class: "btn" %>

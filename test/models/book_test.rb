@@ -9,7 +9,7 @@ class BookTest < ActiveSupport::TestCase
   end
 
   test 'valid book' do
-    book = Book.new(title: "Pragmatic Programmer", author: "Andy Hunt", edition: "1", year: 1999, isbn: "9780201616224", user:@user, status:"available")
+    book = Book.new(title: "Pragmatic Programmer", author: "Andy Hunt", edition: "1", year: 1999, isbn: "9780201616224", user: @user, status: "available")
     assert book.valid?
   end
 end
