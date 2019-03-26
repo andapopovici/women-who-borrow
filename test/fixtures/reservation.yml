@@ -2,8 +2,8 @@
 
 one:
   user: user_one
-  book: book_one
+  book: book_two
 
 two:
   user: user_two
-  book: book_two
+  book: book_one
