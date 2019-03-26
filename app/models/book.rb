@@ -45,6 +45,19 @@ class Book < ApplicationRecord
     reservation && status == BORROWED
   end
 
+  def check_for_reservation_changes(args={})
+    old_status = args[:old_status]
+    new_status = args[:new_status]
+    status_change = [old_status, new_status]
+
+    if status_change == [AVAILABLE, RESERVED]
+      reservation = Reservation.new(user: args[:user], book: self)
+      reservation.save
+    elsif (new_status == Book::AVAILABLE) && new_status != old_status
+      self.reservation.destroy
+    end
+  end
+
   private
 
   def check_status_for_update

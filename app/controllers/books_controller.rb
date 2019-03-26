@@ -44,7 +44,11 @@ class BooksController < ApplicationController
     respond_to do |format|
       old_status = @book.status
       if @book.update(book_params)
-        check_for_reservation_changes(old_status, book_params[:status])
+        @book.check_for_reservation_changes(
+          old_status: old_status,
+          new_status: book_params[:status],
+          user: current_user
+          )
         format.html { redirect_to @book, notice: 'Book was successfully updated.' }
         format.json { render :show, status: :ok, location: @book }
       else
@@ -77,16 +81,5 @@ class BooksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def book_params
       params.require(:book).permit(:title, :author, :edition, :year, :isbn, :user, :status)
-    end
-
-    def check_for_reservation_changes(old_status, new_status)
-      status_change = [old_status, new_status]
-
-      if status_change == [Book::AVAILABLE, Book::RESERVED]
-        reservation = Reservation.new(user: current_user, book: @book)
-        reservation.save
-      elsif (new_status == Book::AVAILABLE) && new_status != old_status
-        @book.reservation.destroy
-      end
     end
 end
