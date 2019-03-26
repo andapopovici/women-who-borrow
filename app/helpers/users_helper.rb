@@ -1,20 +1,16 @@
 module UsersHelper
 
-  def owned_books(user)
-    user.books
+  def books_reserved_by(user)
+    reserved_or_borrowed_by(user).reserved
   end
 
-  def reserved_books(user)
-    reserved_or_borrowed(user).select { |b| b.status == Book::RESERVED }
-  end
-
-  def borrowed_books(user)
-    reserved_or_borrowed(user).select { |b| b.status == Book::BORROWED }
+  def books_borrowed_by(user)
+    reserved_or_borrowed_by(user).borrowed
   end
 
   private
 
-  def reserved_or_borrowed(user)
-    user.reservations.map(&:book)
+  def reserved_or_borrowed_by(user)
+    Book.joins(:reservation).where("reservations.user_id = ?", user.id)
   end
 end
