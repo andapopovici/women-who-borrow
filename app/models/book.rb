@@ -3,8 +3,8 @@ class Book < ApplicationRecord
   has_one :reservation, dependent: :destroy
   belongs_to :user, foreign_key: "user_id"
 
-  validate :cannot_edit_reserved_or_booked
-  before_destroy :cannot_destroy_reserved_or_booked
+  before_update :check_status_for_update
+  before_destroy :check_status_for_deletion
 
   STATUSES = [
     AVAILABLE = 'available',
@@ -17,20 +17,20 @@ class Book < ApplicationRecord
   scope :borrowed, -> { where(status: BORROWED) }
   scope :reserved, -> { where(status: RESERVED) }
 
-  def belongs_to?(current_user)
-    user == current_user
+  def belongs_to?(user)
+    self.user == user
   end
 
   def is_available?
     status == AVAILABLE
   end
 
-  def available_to_borrow_by?(current_user)
-    status == AVAILABLE && !belongs_to?(current_user)
+  def available_to_borrow_by?(user)
+    status == AVAILABLE && !belongs_to?(user)
   end
 
-  def reserved_by?(current_user)
-    status == RESERVED && reservation.user == current_user
+  def reserved_by?(user)
+    status == RESERVED && reservation.user == user
   end
 
   def borrower
@@ -42,18 +42,19 @@ class Book < ApplicationRecord
   end
 
   def is_borrowed?
-    status == BORROWED
+    reservation && status == BORROWED
   end
 
   private
 
-  def cannot_edit_reserved_or_booked
+  def check_status_for_update
     if status != AVAILABLE && (status_change == nil)
       self.errors[:status] << "This book has been #{status} and cannot be edited"
+      throw :abort
     end
   end
 
-  def cannot_destroy_reserved_or_booked
+  def check_status_for_deletion
     if status != AVAILABLE
       self.errors[:status] << "This book has been #{status} and cannot be deleted"
       throw :abort
