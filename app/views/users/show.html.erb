@@ -10,19 +10,19 @@
 <%= link_to 'Delete account', @user, method: :delete, data: { confirm: 'Are you sure?' } %>
 <% end %>
 
-<h2>Books owned (<%= owned_books(@user).count %> in total):</h2>
-<%= render 'book_table', books: owned_books(@user), table_type: :owned %>
+<h2>Books owned (<%= @user.books.count %> in total):</h2>
+<%= render 'book_table', books: @user.books, table_type: :owned %>
 
 <% if @user == current_user %>
 <%= link_to 'New Book', new_book_path %>
 <% end %>
 
-<h2>Books reserved (<%= reserved_books(@user).count %> in total):</h2>
-<%= render 'book_table', books: reserved_books(@user), table_type: :reserved %>
+<h2>Books reserved (<%= books_reserved_by(@user).count %> in total):</h2>
+<%= render 'book_table', books: books_reserved_by(@user), table_type: :reserved %>
 
 
-<h2>Books borrowed (<%= borrowed_books(@user).count %> in total):</h2>
-<%= render 'book_table', books: borrowed_books(@user), table_type: :borrowed %>
+<h2>Books borrowed (<%= books_borrowed_by(@user).count %> in total):</h2>
+<%= render 'book_table', books: books_borrowed_by(@user), table_type: :borrowed %>
 
 
 

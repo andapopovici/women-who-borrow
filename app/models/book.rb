@@ -14,6 +14,9 @@ class Book < ApplicationRecord
 
   validates :status, :inclusion => { :in => STATUSES }, :allow_blank => false
 
+  scope :borrowed, -> { where(status: BORROWED) }
+  scope :reserved, -> { where(status: RESERVED) }
+
   def belongs_to?(current_user)
   	user == current_user
   end
