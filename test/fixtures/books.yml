@@ -5,8 +5,8 @@ book_one:
   author: MyString
   edition: 1
   year: 1
-  isbn: MyString
-  status: available
+  isbn: 978413123411
+  status: reserved
   user: user_one
 
 book_two:
@@ -14,6 +14,6 @@ book_two:
   author: MyString
   edition: 1
   year: 1
-  isbn: MyString
-  status: available
-  user: user_one
+  isbn: 978413123411
+  status: reserved
+  user: user_two
