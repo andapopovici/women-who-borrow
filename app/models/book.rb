@@ -17,24 +17,28 @@ class Book < ApplicationRecord
   scope :borrowed, -> { where(status: BORROWED) }
   scope :reserved, -> { where(status: RESERVED) }
 
+  def available_to_borrow_by?(user)
+    is_available? && !belongs_to?(user)
+  end
+
+  def reserved_by?(user)
+    if (is_reserved? && borrower == user)
+      true
+    else
+      false
+    end
+  end
+
   def belongs_to?(user)
     self.user == user
   end
 
-  def is_available?
-    status == AVAILABLE
-  end
-
-  def available_to_borrow_by?(user)
-    status == AVAILABLE && !belongs_to?(user)
-  end
-
-  def reserved_by?(user)
-    status == RESERVED && reservation.user == user
-  end
-
   def borrower
     reservation.user
+  end
+
+  def is_available?
+    status == AVAILABLE
   end
 
   def is_reserved?
