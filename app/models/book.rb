@@ -62,14 +62,14 @@ class Book < ApplicationRecord
 
   def check_status_for_update
     if status != AVAILABLE && (status_change == nil)
-      self.errors[:status] << "This book has been #{status} and cannot be edited"
+      self.errors.add(:status, "This book has been #{status} and cannot be edited")
       throw :abort
     end
   end
 
   def check_status_for_deletion
     if status != AVAILABLE
-      self.errors[:status] << "This book has been #{status} and cannot be deleted"
+      self.errors.add(:status, "This book has been #{status} and cannot be deleted")
       throw :abort
     end
   end
