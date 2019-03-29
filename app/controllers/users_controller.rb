@@ -1,5 +1,6 @@
 class UsersController < Clearance::UsersController
     before_action :set_user, only: [:show, :edit, :update, :destroy]
+    before_action :require_authorization, :only => [:edit, :update, :destroy]
 
     def index
         @users = User.all
@@ -39,6 +40,10 @@ class UsersController < Clearance::UsersController
 
     def user_params
         params[:user].permit(:email, :password, :first_name, :last_name)
+    end
+
+    def require_authorization
+      redirect_to user_path unless current_user.can_edit?(@user)
     end
 
 end

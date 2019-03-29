@@ -7,4 +7,8 @@ class User < ApplicationRecord
   def friendly_name
     "#{first_name.capitalize} #{last_name.capitalize}"
   end
+
+  def can_edit?(user)
+    self == user
+  end
 end
