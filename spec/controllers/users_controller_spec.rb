@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
   let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
 
   context "when signed in" do
     before :each do
@@ -41,7 +42,11 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to have_http_status(200)
     end
 
-    it "should not be able to view edit form for others"
+    it "should not be able to view edit form for others" do
+      get :edit, params: {  id: other_user.id }
+
+      expect(response).to have_http_status(302)
+    end
 
     it "should be able to update own details" do
       new_email = "hello@example.com"
@@ -54,14 +59,28 @@ RSpec.describe UsersController, type: :controller do
       expect(user.reload).to have_attributes(email: new_email)
     end
 
-    it "should not be able to update other users"
+    it "should not be able to update other users" do
+      old_email = user.email
+      new_email = "hello@example.com"
 
-     it "should be able to destroy self" do
+      put :update, params: { id: other_user.id, user: {
+        email: new_email
+      } }
+
+      expect(response).to redirect_to other_user
+      expect(user.reload).to have_attributes(email: old_email)
+    end
+
+    it "should be able to destroy self" do
       delete :destroy, params: { id: user.id }
       assert !User.exists?(user.id)
       expect(response).to redirect_to(sign_in_url)
     end
 
-     it "should not be able to destroy others"
+    it "should not be able to destroy others" do
+      delete :destroy, params: { id: other_user.id }
+      assert User.exists?(other_user.id)
+      expect(response).to redirect_to(other_user)
+    end
   end
 end
