@@ -152,4 +152,15 @@ RSpec.describe Book, type: :model do
       end
     end
   end
+
+  describe "#is_editable_by?" do
+    it "returns true for a book the user owns" do
+      owner = available_book.user
+      expect(available_book.is_editable_by?(owner)).to be true
+    end
+
+    it "returns false the user doesn't own" do
+      expect(available_book.is_editable_by?(user)).to be false
+    end
+  end
 end
