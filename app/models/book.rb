@@ -62,6 +62,10 @@ class Book < ApplicationRecord
     end
   end
 
+  def is_editable_by?(user)
+    self.user == user
+  end
+
   private
 
   def check_status_for_update
