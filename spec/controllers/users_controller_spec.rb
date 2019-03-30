@@ -31,7 +31,7 @@ RSpec.describe UsersController, type: :controller do
       } }
 
       expect(response).to have_http_status(302)
-      assert !User.where(email: "ewa_l@example.com").exists?
+      expect(User.where(email: "ewa_l@example.com")).to_not be_present
     end
 
     it "should be able to view user show page" do
@@ -80,7 +80,7 @@ RSpec.describe UsersController, type: :controller do
     it "should be able to destroy self" do
       delete :destroy, params: { id: user.id }
 
-      assert !User.exists?(user.id)
+      expect{ User.find(user.id) }.to raise_error(ActiveRecord::RecordNotFound)
       expect(response).to redirect_to(sign_in_url)
       expect(flash[:notice]).to eq("Your account was successfully deleted.")
     end
@@ -88,7 +88,7 @@ RSpec.describe UsersController, type: :controller do
     it "should not be able to destroy others" do
       delete :destroy, params: { id: other_user.id }
 
-      assert User.exists?(other_user.id)
+      expect(User.find(other_user.id)).to be_present
       expect(response).to redirect_to(other_user)
       expect(flash.keys).to be_empty
     end

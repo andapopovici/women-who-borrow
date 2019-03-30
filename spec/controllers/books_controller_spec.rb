@@ -84,7 +84,9 @@ RSpec.describe BooksController, type: :controller do
     it "should be able to destroy own book" do
       delete :destroy, params: { id: users_book.id }
 
-      assert !Book.exists?(users_book.id)
+      expect{ Book.find(users_book.id) }.to raise_error(
+        ActiveRecord::RecordNotFound
+      )
       expect(response).to redirect_to(books_url)
       expect(flash[:notice]).to eq("Book was successfully destroyed.")
     end
@@ -92,7 +94,7 @@ RSpec.describe BooksController, type: :controller do
     it "should not be able to destroy other user's book" do
       delete :destroy, params: { id: book.id }
 
-      assert Book.exists?(book.id)
+      expect(Book.find(book.id)).to be_present
       expect(response).to redirect_to(book_url)
       expect(flash.keys).to be_empty
     end
