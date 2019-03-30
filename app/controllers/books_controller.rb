@@ -1,6 +1,7 @@
 class BooksController < ApplicationController
   before_action :require_login
   before_action :set_book, only: [:show, :edit, :update, :destroy]
+  before_action :require_authorization, :only => [:edit, :destroy]
 
   # GET /books
   # GET /books.json
@@ -25,6 +26,7 @@ class BooksController < ApplicationController
   # POST /books
   # POST /books.json
   def create
+    # Always set the book's owner to current user
     @book = Book.new(book_params.merge(user: current_user, status: Book::AVAILABLE))
 
     respond_to do |format|
@@ -82,4 +84,8 @@ class BooksController < ApplicationController
     def book_params
       params.require(:book).permit(:title, :author, :edition, :year, :isbn, :user, :status)
     end
-end
+
+    def require_authorization
+      redirect_to book_path unless current_user.can_edit?(@book)
+    end
+  end
