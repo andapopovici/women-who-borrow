@@ -1,10 +1,11 @@
 Rails.application.routes.draw do
-    resources :books do
-    end
+  resources :books do
+    resources :reservations, only: [:new, :create, :show, :destroy]
+  end
 
-    resources :tags
+  resources :tags
 
-    resources :users
+  resources :users
 
-    root 'books#index'
+  root 'books#index'
 end

@@ -69,16 +69,29 @@ RSpec.describe BooksController, type: :controller do
       expect(response).to redirect_to book_url
     end
 
-    it "should not be able to update a book" do
-      new_status = Book::RESERVED
+    it "should be able to update their own book" do
+      new_title = "Small Gods"
+
+      put :update, params: { id: users_book.id, book: {
+        title: new_title
+      } }
+
+      expect(response).to redirect_to users_book
+      expect(users_book.reload).to have_attributes(title: new_title)
+      expect(flash.notice).to eq("Book was successfully updated.")
+    end
+
+    it "should not be able to update a book they don't own" do
+      old_title = book.title
+      new_title = "Small Gods"
 
       put :update, params: { id: book.id, book: {
-        status: new_status
+        title: new_title
       } }
 
       expect(response).to redirect_to book
-      expect(book.reload).to have_attributes(status: new_status)
-      expect(flash.notice).to eq("Book was successfully updated.")
+      expect(users_book.reload).to have_attributes(title: old_title)
+      expect(flash.keys).to be_empty
     end
 
     it "should be able to destroy own book" do

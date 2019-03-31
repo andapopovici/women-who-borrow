@@ -1,0 +1,45 @@
+<p>
+  <strong>Title:</strong>
+  <%= @book.title %>
+</p>
+
+<p>
+  <strong>Author:</strong>
+  <%= @book.author %>
+</p>
+
+<p>
+  <strong>Edition:</strong>
+  <%= @book.edition %>
+</p>
+
+<p>
+  <strong>Year:</strong>
+  <%= @book.year %>
+</p>
+
+<p>
+  <strong>Isbn:</strong>
+  <%= @book.isbn %>
+</p>
+
+<p>
+  <strong>Tags</strong>
+<%= collection_check_boxes(:book, :tag_ids, Tag.all, :id, :name) %>
+</p>
+
+
+<p>
+  <strong>Owner:</strong>
+  <%= link_to "#{ @book.user.first_name }", user_path(@book.user) %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= capitalized_status(@book) %>
+  <% unless @book.is_available? %>
+    by <%= link_to "#{ @book.borrower.first_name }", user_path(@book.borrower) %>
+  <% end %>
+
+</p>
+
