@@ -1,7 +1,7 @@
 class BooksController < ApplicationController
   before_action :require_login
   before_action :set_book, only: [:show, :edit, :update, :destroy]
-  before_action :require_authorization, :only => [:edit, :destroy]
+  before_action :require_authorization, :only => [:edit, :update, :destroy]
 
   # GET /books
   # GET /books.json
@@ -46,11 +46,6 @@ class BooksController < ApplicationController
     respond_to do |format|
       old_status = @book.status
       if @book.update(book_params)
-        @book.check_for_reservation_changes(
-          old_status: old_status,
-          new_status: book_params[:status],
-          user: current_user
-          )
         format.html { redirect_to @book, notice: 'Book was successfully updated.' }
         format.json { render :show, status: :ok, location: @book }
       else

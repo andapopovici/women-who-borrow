@@ -127,32 +127,6 @@ RSpec.describe Book, type: :model do
     end
   end
 
-  describe "#check_for_reservation_changes" do
-    context "when a User reserves a Book" do
-      it "creates a new reservation" do
-        available_book.check_for_reservation_changes(
-          old_status: Book::AVAILABLE,
-          new_status: Book::RESERVED,
-          user: user
-          )
-
-        expect(available_book.reservation).to be_present
-      end
-    end
-
-    context "when a Book is returned" do
-      it "destroys reservation" do
-        borrowed_book.check_for_reservation_changes(
-          old_status: Book::BORROWED,
-          new_status: Book::AVAILABLE,
-          user: user
-          )
-
-        expect(borrowed_book.reservation).to be_present
-      end
-    end
-  end
-
   describe "#is_editable_by?" do
     it "returns true for a book the user owns" do
       owner = available_book.user
@@ -161,6 +135,40 @@ RSpec.describe Book, type: :model do
 
     it "returns false the user doesn't own" do
       expect(available_book.is_editable_by?(user)).to be false
+    end
+  end
+
+  describe "#reserve" do
+    it "changes book status to reserved" do
+      available_book.reserve
+
+      expect(available_book.status). to eq(Book::RESERVED)
+    end
+
+    it "doesn't change the status if the book is reserved" do
+      reserved_book.reserve
+
+      expect(reserved_book.status). to eq(Book::RESERVED)
+      expect(reserved_book.errors.full_messages). to eq(
+        ["This book cannot be reserved"]
+      )
+    end
+
+    it "doesn't change the status if the book is borrowed" do
+      borrowed_book.reserve
+
+      expect(borrowed_book.status). to eq(Book::BORROWED)
+      expect(borrowed_book.errors.full_messages). to eq(
+        ["This book cannot be reserved"]
+      )
+    end
+  end
+
+  describe "#unreserve" do
+    it "updates book status to available" do
+      reserved_book.unreserve
+
+      expect(reserved_book.status).to eq(Book::AVAILABLE)
     end
   end
 end

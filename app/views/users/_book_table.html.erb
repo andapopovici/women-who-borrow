@@ -43,11 +43,11 @@
           <% end %>
         <% end %>
         <% if book.available_to_borrow_by?(current_user) %>
-          <td><%= link_to 'Reserve', book %></td>
+          <td><%= link_to 'Reserve', new_book_reservation_path(book) %></td>
         <% end %>
       <% end %>
       <% if table_type == :reserved %>
-        <td> <%= link_to 'Withdraw reservation', book %></td>
+        <td> <%= link_to 'Withdraw reservation', [book, book.reservation], method: :delete, data: { confirm: 'Are you sure?' }%></td>
       <% end %>
     </tr>
   <% end %>
