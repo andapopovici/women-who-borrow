@@ -114,6 +114,12 @@ RSpec.describe BooksController, type: :controller do
   end
 
   context "when not signed in" do
+    it "should not be able to get new" do
+      get :new
+
+      expect(response).to deny_access(redirect: sign_in_url)
+    end
+
     it "should not be able to get index" do
       get :index
 

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   resources :books do
-    resources :reservations, only: [:new, :create, :show, :destroy]
+    resources :reservations, only: [:new, :create, :destroy]
   end
 
   resources :tags
