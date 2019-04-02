@@ -29,16 +29,13 @@
             <td>
               <%= form_for book do |f| %>
                 <%= f.hidden_field :status, value: Book::BORROWED %>
-                <%= f.submit "Accept request", class: "btn" %>
+                <%= f.submit "Accept request" %>
               <% end %>
             </td>
           <% end %>
           <% if book.is_borrowed? %>
             <td>
-              <%= form_for book do |f| %>
-                <%= f.hidden_field :status, value: Book::AVAILABLE %>
-                <%= f.submit "Mark as returned", class: "btn" %>
-              <% end %>
+              <%= link_to "Mark as returned", [book, book.reservation], method: :delete, data: { confirm: 'Are you sure?' } %>
             </td>
           <% end %>
         <% end %>
@@ -47,7 +44,9 @@
         <% end %>
       <% end %>
       <% if table_type == :reserved %>
-        <td> <%= link_to 'Withdraw reservation', [book, book.reservation], method: :delete, data: { confirm: 'Are you sure?' }%></td>
+        <% if book.reserved_by?(current_user) %>
+          <td> <%= link_to 'Withdraw reservation', [book, book.reservation], method: :delete, data: { confirm: 'Are you sure?' }%></td>
+          <% end %>
       <% end %>
     </tr>
   <% end %>
