@@ -22,7 +22,6 @@ RSpec.describe ReservationsController, type: :controller do
       post :create, params: { book_id: book.id }
 
       expect(book.reservation).to be_present
-      expect(book.reload.status).to eq(Book::RESERVED)
       expect(flash[:notice]).to eq(
         "Reservation was successfully created."
         )
@@ -32,7 +31,19 @@ RSpec.describe ReservationsController, type: :controller do
       post :create, params: { book_id: book.id, user: other_user }
 
       expect(book.reservation).to be_nil
-      expect(book.reload.status).to eq(Book::AVAILABLE)
+    end
+
+    it "should be able to update a reservation" do
+      reserved_book = create(:book, :reserved)
+      reservation = reserved_book.reservation
+
+      timestamp = Time.now
+
+      put :update, params: { book_id: reserved_book.id, id: reservation.id, reservation: { approved_at: timestamp } }
+
+      expect(response).to redirect_to book_path(reserved_book)
+      expect(reservation.reload.approved_at.to_s).to eq(timestamp.utc.to_s)
+      expect(flash.notice).to eq("Reservation was successfully updated.")
     end
 
     it "should be able to cancel their own reservation" do
@@ -48,14 +59,13 @@ RSpec.describe ReservationsController, type: :controller do
 
       expect(response).to redirect_to(book_path(reserved_book))
       expect(flash[:notice]).to eq("Reservation was successfully destroyed.")
-      expect(reserved_book.reload.status).to eq(Book::AVAILABLE)
-      expect(reserved_book.reservation).to be_nil
+      expect(reserved_book.reload.reservation).to be_nil
     end
 
     it "should be able to cancel a reservation if they own the book" do
       reserved_book = create(:book, :reserved).tap do |book|
-                        book.update_column(:user_id, user.id)
-                      end
+        book.update_column(:user_id, user.id)
+      end
       reservation = reserved_book.reservation
 
       delete :destroy, params: {
@@ -65,8 +75,7 @@ RSpec.describe ReservationsController, type: :controller do
 
       expect(response).to redirect_to(book_path(reserved_book))
       expect(flash[:notice]).to eq("Reservation was successfully destroyed.")
-      expect(reserved_book.reload.status).to eq(Book::AVAILABLE)
-      expect(reserved_book.reservation).to be_nil
+      expect(reserved_book.reload.reservation).to be_nil
     end
 
     it "should not be able to cancel a reservation for another user" do
@@ -76,8 +85,7 @@ RSpec.describe ReservationsController, type: :controller do
         id: reserved_book.reservation.id
       }
 
-      expect(reserved_book.reload.status).to eq(Book::RESERVED)
-      expect(reserved_book.reservation).to be_present
+      expect(reserved_book.reload.reservation).to be_present
     end
   end
 
@@ -90,6 +98,15 @@ RSpec.describe ReservationsController, type: :controller do
 
     it "should not be able to create a reservation" do
       post :create, params: { book_id: book.id }
+
+      expect(response).to deny_access(redirect: sign_in_url)
+    end
+
+    it "should not be able to update a reservation" do
+      reserved_book = create(:book, :reserved)
+      reservation = reserved_book.reservation
+
+      put :update, params: { book_id: reserved_book.id, id: reservation.id, reservation: { approved_at: Time.now } }
 
       expect(response).to deny_access(redirect: sign_in_url)
     end

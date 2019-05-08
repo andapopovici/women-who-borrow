@@ -27,7 +27,7 @@ class BooksController < ApplicationController
   # POST /books.json
   def create
     # Always set the book's owner to current user
-    @book = Book.new(book_params.merge(user: current_user, status: Book::AVAILABLE))
+    @book = Book.new(book_params.merge(user: current_user))
 
     respond_to do |format|
       if @book.save
@@ -44,7 +44,6 @@ class BooksController < ApplicationController
   # PATCH/PUT /books/1.json
   def update
     respond_to do |format|
-      old_status = @book.status
       if @book.update(book_params)
         format.html { redirect_to @book, notice: 'Book was successfully updated.' }
         format.json { render :show, status: :ok, location: @book }

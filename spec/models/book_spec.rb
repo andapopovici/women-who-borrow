@@ -11,7 +11,6 @@ RSpec.describe Book, type: :model do
   describe "associations" do
     it { is_expected.to have_one(:reservation).dependent(:destroy) }
     it { is_expected.to belong_to(:user) }
-    it { is_expected.to validate_inclusion_of(:status).in_array(Book::STATUSES) }
   end
 
   describe "checking status in callbacks" do
@@ -68,17 +67,17 @@ RSpec.describe Book, type: :model do
 
   describe "borrowed scope" do
     it "only returns borrowed books" do
-      expect(Book.borrowed.where_values_hash).to eq(
-        { "status" => Book::BORROWED }
-        )
+      borrowed_book
+      expect(Book.borrowed.count).to eq(1)
+      expect(Book.borrowed).to include(borrowed_book)
     end
   end
 
   describe "reserved scope" do
     it "only returns reserved books" do
-      expect(Book.reserved.where_values_hash).to eq(
-        { "status" => Book::RESERVED }
-        )
+      reserved_book
+      expect(Book.reserved.count).to eq(1)
+      expect(Book.reserved).to include(reserved_book)
     end
   end
 
@@ -127,6 +126,72 @@ RSpec.describe Book, type: :model do
     end
   end
 
+  describe "#belongs_to" do
+    it "returns true for the book owner" do
+      owner = available_book.user
+
+      expect(available_book.belongs_to?(owner)).to be true
+    end
+
+    it "returns false for any other user" do
+      other_user = user
+
+      expect(available_book.belongs_to?(other_user)).to be false
+    end
+  end
+
+  describe "#borrower" do
+    it "returns the user associated with book reservation" do
+      borrower = reserved_book.reservation.user
+
+      expect(reserved_book.borrower).to eq(borrower)
+    end
+  end
+
+  describe "#is_available?" do
+    it "returns true for a book with no reservation" do
+      expect(available_book.is_available?).to be true
+    end
+
+    it "returns false for a reserved book" do
+      expect(reserved_book.is_available?).to be false
+    end
+
+    it "returns false for a borrowed book" do
+      expect(borrowed_book.is_available?).to be false
+    end
+  end
+
+  describe "#is_reserved?" do
+    it "returns true for a reserved book" do
+      expect(reserved_book.is_reserved?).to be true
+    end
+
+    it "returns false for a book with no reservation" do
+      expect(available_book.is_reserved?).to be false
+    end
+
+    it "returns false for a borrowed book" do
+      expect(borrowed_book.is_reserved?).to be false
+    end
+  end
+
+
+  describe "#is_borrowed?" do
+    it "returns true for a borrowed book" do
+      expect(borrowed_book.is_borrowed?).to be true
+    end
+
+    it "returns false for a reserved book" do
+      expect(reserved_book.is_borrowed?).to be false
+    end
+
+    it "returns false for a book with no reservation" do
+      expect(available_book.is_borrowed?).to be false
+    end
+  end
+
+
   describe "#is_editable_by?" do
     it "returns true for a book the user owns" do
       owner = available_book.user
@@ -135,40 +200,6 @@ RSpec.describe Book, type: :model do
 
     it "returns false the user doesn't own" do
       expect(available_book.is_editable_by?(user)).to be false
-    end
-  end
-
-  describe "#reserve" do
-    it "changes book status to reserved" do
-      available_book.reserve
-
-      expect(available_book.status). to eq(Book::RESERVED)
-    end
-
-    it "doesn't change the status if the book is reserved" do
-      reserved_book.reserve
-
-      expect(reserved_book.status). to eq(Book::RESERVED)
-      expect(reserved_book.errors.full_messages). to eq(
-        ["This book cannot be reserved"]
-      )
-    end
-
-    it "doesn't change the status if the book is borrowed" do
-      borrowed_book.reserve
-
-      expect(borrowed_book.status). to eq(Book::BORROWED)
-      expect(borrowed_book.errors.full_messages). to eq(
-        ["This book cannot be reserved"]
-      )
-    end
-  end
-
-  describe "#unreserve" do
-    it "updates book status to available" do
-      reserved_book.unreserve
-
-      expect(reserved_book.status).to eq(Book::AVAILABLE)
     end
   end
 end

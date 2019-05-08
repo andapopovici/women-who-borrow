@@ -23,7 +23,7 @@
         <td><%= book.year %></td>
         <td><%= book.isbn %></td>
         <td><%= link_to "#{ book.user.first_name }", user_path(book.user) %></td>
-        <td><%= capitalized_status(book) %></td>
+        <td><%= status(book) %></td>
         <% if book.available_to_borrow_by?(current_user) %>
           <td><%= link_to 'Reserve', new_book_reservation_path(book) %></td>
         <% end %>

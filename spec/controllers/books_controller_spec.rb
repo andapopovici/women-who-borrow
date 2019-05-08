@@ -30,7 +30,6 @@ RSpec.describe BooksController, type: :controller do
         isbn: book.isbn,
         title: book.title,
         year: book.year,
-        status: book.status,
         user: user
       } }
 
@@ -45,7 +44,6 @@ RSpec.describe BooksController, type: :controller do
         isbn: book.isbn,
         title: book.title,
         year: book.year,
-        status: book.status,
         user: other_user
       } }
       expect(other_user.books.count).to eq(0)

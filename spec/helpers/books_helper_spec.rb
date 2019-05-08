@@ -12,11 +12,21 @@ require 'rails_helper'
 # end
 RSpec.describe BooksHelper, type: :helper do
 
-  describe "#capitalized_status" do
-    let(:book) { create(:book) }
+  describe "#status" do
+    let(:available_book) { create(:book) }
+    let(:reserved_book) { create(:book, :reserved) }
+    let(:borrowed_book) { create(:book, :borrowed) }
 
-    it "returns capitalized book status" do
-      expect(capitalized_status(book)).to eq(book.status.capitalize)
+    it "returns Available for books with no reservation" do
+      expect(status(available_book)).to eq("Available")
+    end
+
+    it "returns Reserved for books with unapproved reservation" do
+      expect(status(reserved_book)).to eq("Reserved")
+    end
+
+    it "returns Borrowed for books with approved reservation" do
+      expect(status(borrowed_book)).to eq("Borrowed")
     end
   end
 end
