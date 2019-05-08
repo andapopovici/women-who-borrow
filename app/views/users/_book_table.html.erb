@@ -17,7 +17,7 @@
       <td> <%= book.isbn %> </td>
       <% if table_type == :owned %>
         <td>
-          <%= capitalized_status(book) %>
+          <%= status(book) %>
           <% unless book.is_available? %>
             by <%= link_to "#{ book.borrower.first_name }", user_path(book.borrower) %>
           <% end %>
@@ -27,8 +27,8 @@
           <td><%= link_to 'Destroy', book, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           <% if book.is_reserved? %>
             <td>
-              <%= form_for book do |f| %>
-                <%= f.hidden_field :status, value: Book::BORROWED %>
+              <%= form_for [book, book.reservation] do |f| %>
+                <%= f.hidden_field :approved_at, value: Time.now %>
                 <%= f.submit "Accept request" %>
               <% end %>
             </td>

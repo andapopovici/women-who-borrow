@@ -1,6 +1,12 @@
 module BooksHelper
 
-  def capitalized_status(book)
-    book.status.capitalize
+  def status(book)
+    if book.is_available?
+      "Available"
+    elsif book.is_reserved?
+      "Reserved"
+    elsif book.is_borrowed?
+      "Borrowed"
+    end
   end
 end

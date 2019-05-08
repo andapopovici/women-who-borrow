@@ -36,7 +36,7 @@
 
 <p>
   <strong>Status:</strong>
-  <%= capitalized_status(@book) %>
+  <%= status(@book) %>
   <% unless @book.is_available? %>
     by <%= link_to "#{ @book.borrower.first_name }", user_path(@book.borrower) %>
   <% end %>
