@@ -33,8 +33,10 @@ RSpec.describe ReservationsController, type: :controller do
       expect(book.reservation).to be_nil
     end
 
-    it "should be able to update a reservation" do
-      reserved_book = create(:book, :reserved)
+    it "should be able to update a reservation of a book they own" do
+      reserved_book = create(:book, :reserved).tap do |book|
+        book.update_column(:user_id, user.id)
+      end
       reservation = reserved_book.reservation
 
       timestamp = Time.now
@@ -44,6 +46,17 @@ RSpec.describe ReservationsController, type: :controller do
       expect(response).to redirect_to book_path(reserved_book)
       expect(reservation.reload.approved_at.to_s).to eq(timestamp.utc.to_s)
       expect(flash.notice).to eq("Reservation was successfully updated.")
+    end
+
+    it "should not be able to update a reservation of a book they own" do
+      reserved_book = create(:book, :reserved)
+      reservation = reserved_book.reservation
+
+      timestamp = Time.now
+
+      put :update, params: { book_id: reserved_book.id, id: reservation.id, reservation: { approved_at: timestamp } }
+
+      expect(reservation.reload.approved_at).to be nil
     end
 
     it "should be able to cancel their own reservation" do

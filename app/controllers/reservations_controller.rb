@@ -32,6 +32,11 @@ class ReservationsController < ApplicationController
   end
 
   def update
+    # Only the owner can edit a book reservation
+    unless current_user == @reservation.book.user
+      return
+    end
+
     respond_to do |format|
       if @reservation.update(reservation_params)
         format.html { redirect_to book_path(@book), notice: 'Reservation was successfully updated.' }
@@ -44,7 +49,7 @@ class ReservationsController < ApplicationController
   end
 
   def destroy
-    # Don't allow user to destroy other user's reservation unless they own the book
+    # Only the book owner and user reserving a book can destroy the reservation
     unless (current_user == @reservation.user) || (current_user == @reservation.book.user)
       return
     end
