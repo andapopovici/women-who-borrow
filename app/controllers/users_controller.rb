@@ -1,5 +1,5 @@
 class UsersController < Clearance::UsersController
-    before_action :require_login, except: [:new]
+    before_action :require_login, except: [:new, :create]
     before_action :set_user, only: [:show, :edit, :update, :destroy]
     before_action :require_authorization, :only => [:edit, :update, :destroy]
 
